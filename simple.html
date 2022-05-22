@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Chatアプリ</title>
+<link rel="stylesheet" href="simple.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+    body {
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+      }
+      
+      button, input, select, textarea, pre, th, td, li, dt, dd {
+        font-family: inherit;
+      }
+
+</style>
+</head>
+<body>
+
+<!-- コンテンツ表示画面 -->
+
+<h1>G's Talk</h1>
+
+<div id="output"></div>
+
+<div id="uname_box">
+    <input type="text" id="uname" placeholder="Write your name">
+</div>
+
+<div id="message_box">
+    <textarea name="" id="text" rows="1" placeholder="Edit message"></textarea>
+    <button id="send"><span class="material-symbols-outlined send">send</span></button>
+</div>
+
+<!--/ コンテンツ表示画面 -->
+
+
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<!--** 以下Firebase **-->
+<script type="module">
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+    from "https://cdnjs.cloudflare.com/ajax/libs/firebase/9.8.1/firebase-database.min.js";
+    // 追加で貼るときは、firebaseのverが一致していることを要確認！
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "",
+//   ↑api Key絶対削除してgitHubに上げるべし。
+    authDomain: "fir-demo-3a1d9.firebaseapp.com",
+    projectId: "fir-demo-3a1d9",
+    storageBucket: "fir-demo-3a1d9.appspot.com",
+    messagingSenderId: "22439050724",
+    appId: "1:22439050724:web:f07d0edb3f0f65042f1bf1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+const dbRef = ref(db, "chat");
+
+// テキストエリアを文字数に応じて自動で高さ調整
+$("#text").on('change keyup keydown paste cut', function(){
+if ($(this).outerHeight() > this.scrollHeight){
+    $(this).height(16)
+}
+while ($(this).outerHeight() < this.scrollHeight && $(this).outerHeight()<=250){
+        $(this).height($(this).height() + 1)
+    }
+});
+
+// 送信処理1：送信ボタン
+$("#send").on("click", function(){
+    const msg = {
+        uname: $("#uname").val(),
+        text: $("#text").val()
+    }
+    text: $("#text").val("");
+    const newPostRef = push(dbRef);
+    set(newPostRef, msg);
+});
+
+// 送信処理2：Enterキー
+$("#text").on("keydown", function(e){
+    if(e.keyCode === 13){
+        const msg = {
+        uname: $("#uname").val(),
+        text: $("#text").val()
+        }
+        text: $("#text").val("");
+        const newPostRef = push(dbRef);
+        set(newPostRef, msg);
+    }
+});
+
+// 受信処理
+onChildAdded(dbRef, function(data){
+    const msg = data.val();
+    const key = data.key;
+    const h = `<p id="${key}" class="message"><span class="material-symbols-outlined account">account_circle</span>${msg.uname}:<br>${msg.text}<span class="material-symbols-outlined bin">delete</span></p>`;
+    $("#output").append(h);
+});
+
+// 1行削除処理
+$("#output").on("click",".message", function(){
+    const dlt = $(this).attr('id');
+    remove(ref(db, "chat/" + dlt));
+ });
+
+//  1行削除処理をHTML上にも反映
+ onChildRemoved(dbRef, function(data){
+    const key = '#'+data.key;
+    $(key).remove();
+ });
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

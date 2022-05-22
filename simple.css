@@ -1,0 +1,65 @@
+h1{
+    width: 505px;
+    text-align: center;
+    background-color: blue;
+    color: white;
+}
+
+#output{
+    height: 200px;
+    width: 500px;
+    border: 3px solid black;
+    overflow: scroll;
+    margin: 0 0 30px;
+    background-color: aliceblue;
+}
+
+#uname_box{
+    margin: 0 0 5px;
+}
+
+#uname{
+    width: 498px;
+    height: 20px;
+    font-size: 20px;
+    border: 2px solid black;
+}
+
+#message_box{
+    display: flex;
+}
+
+#text{
+    overflow: scroll;
+    height: 24px;
+    width: 498px;
+    font-size: 20px;
+    border: 2px solid black;
+}
+
+#send{
+    height: 34px;
+    margin: 0;
+    border: none;
+    background-color: white;
+}
+
+#send:hover{
+    cursor: pointer;
+}
+
+.send{
+    color: blue;
+    height: 25px;
+}
+
+.message{
+    display: flex;
+}
+
+.bin{
+    margin-left: auto;
+    cursor: pointer;
+}
+
+
